@@ -1,0 +1,19 @@
+App(
+    appid="nfc_blank_card",
+    name="NFC Blank Card",
+    apptype=FlipperAppType.EXTERNAL,
+    targets=["f7"],
+    entry_point="nfc_blank_card_app",
+    requires=[
+        "storage",
+        "gui",
+    ],
+    stack_size=4 * 1024,
+    fap_description="Application for writing to blank NFC tags and clearing written NFC tags",
+    fap_version="1.5",
+    fap_icon="assets/125_10px.png",
+    fap_category="NFC",
+    fap_private_libs=[
+    ],
+    fap_icon_assets="assets",
+)
