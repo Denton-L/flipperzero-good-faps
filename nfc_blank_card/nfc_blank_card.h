@@ -2,5 +2,4 @@
 
 #include <furi.h>
 
-struct NFCBlankCardApp {
-};
+struct NFCBlankCardApp {};
