@@ -12,6 +12,8 @@ struct NFCBlankCardApp {
     SceneManager* scene_manager;
     ViewDispatcher* view_dispatcher;
 
+    Gui* gui;
+
     Submenu* submenu;
 };
 
