@@ -3,7 +3,7 @@
 #include <gui/modules/submenu.h>
 
 struct SubmenuItem {
-    const char *label;
+    const char* label;
     SubmenuItemCallback callback;
 };
 

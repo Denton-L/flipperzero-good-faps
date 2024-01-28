@@ -8,7 +8,8 @@ struct NFCBlankCardApp* nfc_blank_card_app_alloc(void) {
 
     struct NFCBlankCardApp* instance = malloc(sizeof(*instance));
 
-    instance->scene_manager = scene_manager_alloc(&nfc_blank_card_scene_manager_handlers, instance);
+    instance->scene_manager =
+        scene_manager_alloc(&nfc_blank_card_scene_manager_handlers, instance);
     instance->view_dispatcher = view_dispatcher_alloc();
 
     instance->submenu = submenu_alloc();

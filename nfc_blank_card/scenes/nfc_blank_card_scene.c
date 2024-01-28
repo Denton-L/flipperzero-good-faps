@@ -30,7 +30,13 @@ const SceneManagerHandlers nfc_blank_card_scene_manager_handlers = {
 };
 
 void nfc_blank_card_assert_scene_handlers_correct(void) {
-    furi_assert(nfc_blank_card_scene_manager_handlers.scene_num == ARRAY_LENGTH(nfc_blank_card_on_enter_handlers));
-    furi_assert(nfc_blank_card_scene_manager_handlers.scene_num == ARRAY_LENGTH(nfc_blank_card_on_event_handlers));
-    furi_assert(nfc_blank_card_scene_manager_handlers.scene_num == ARRAY_LENGTH(nfc_blank_card_on_exit_handlers));
+    furi_assert(
+        nfc_blank_card_scene_manager_handlers.scene_num ==
+        ARRAY_LENGTH(nfc_blank_card_on_enter_handlers));
+    furi_assert(
+        nfc_blank_card_scene_manager_handlers.scene_num ==
+        ARRAY_LENGTH(nfc_blank_card_on_event_handlers));
+    furi_assert(
+        nfc_blank_card_scene_manager_handlers.scene_num ==
+        ARRAY_LENGTH(nfc_blank_card_on_exit_handlers));
 }
