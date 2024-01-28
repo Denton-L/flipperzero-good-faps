@@ -8,12 +8,12 @@
 #include <notification/notification.h>
 #include <notification/notification_messages.h>
 
-enum NFCBlankCardAppView {
-    NFCBlankCardAppViewSubmenu,
-    NFCBlankCardAppViewPopup,
+enum NfcBlankCardAppView {
+    NfcBlankCardAppViewSubmenu,
+    NfcBlankCardAppViewPopup,
 };
 
-struct NFCBlankCardApp {
+struct NfcBlankCardApp {
     SceneManager* scene_manager;
     ViewDispatcher* view_dispatcher;
 
@@ -24,8 +24,8 @@ struct NFCBlankCardApp {
     Popup* popup;
 };
 
-struct NFCBlankCardApp* nfc_blank_card_app_alloc(void);
-void nfc_blank_card_app_free(struct NFCBlankCardApp* instance);
+struct NfcBlankCardApp* nfc_blank_card_app_alloc(void);
+void nfc_blank_card_app_free(struct NfcBlankCardApp* instance);
 
-void nfc_blank_card_app_blink_start(struct NFCBlankCardApp* instance);
-void nfc_blank_card_app_blink_stop(struct NFCBlankCardApp* instance);
+void nfc_blank_card_app_blink_start(struct NfcBlankCardApp* instance);
+void nfc_blank_card_app_blink_stop(struct NfcBlankCardApp* instance);

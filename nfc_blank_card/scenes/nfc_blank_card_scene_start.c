@@ -8,11 +8,11 @@ struct SubmenuScene {
 
 static const struct SubmenuScene submenu_scenes[] = {
     {
-        .label = "Reset NFC Tag to Blank",
-        .scene_id = NFCBlankCardAppSceneReset,
+        .label = "Reset Nfc Tag to Blank",
+        .scene_id = NfcBlankCardAppSceneReset,
     },
     {
-        .label = "Write to Blank NFC Tag", // TODO
+        .label = "Write to Blank Nfc Tag", // TODO
         .scene_id = -1,
     },
     {
@@ -21,12 +21,12 @@ static const struct SubmenuScene submenu_scenes[] = {
 };
 
 void nfc_blank_card_scene_start_submenu_callback(void* context, uint32_t index) {
-    struct NFCBlankCardApp* instance = context;
+    struct NfcBlankCardApp* instance = context;
     view_dispatcher_send_custom_event(instance->view_dispatcher, index);
 }
 
 void nfc_blank_card_scene_start_on_enter(void* context) {
-    struct NFCBlankCardApp* instance = context;
+    struct NfcBlankCardApp* instance = context;
 
     Submenu* submenu = instance->submenu;
 
@@ -36,11 +36,11 @@ void nfc_blank_card_scene_start_on_enter(void* context) {
             submenu, scene->label, index++, nfc_blank_card_scene_start_submenu_callback, instance);
     }
 
-    view_dispatcher_switch_to_view(instance->view_dispatcher, NFCBlankCardAppViewSubmenu);
+    view_dispatcher_switch_to_view(instance->view_dispatcher, NfcBlankCardAppViewSubmenu);
 }
 
 bool nfc_blank_card_scene_start_on_event(void* context, SceneManagerEvent event) {
-    struct NFCBlankCardApp* instance = context;
+    struct NfcBlankCardApp* instance = context;
 
     if(event.type != SceneManagerEventTypeCustom) {
         return false;
@@ -51,7 +51,7 @@ bool nfc_blank_card_scene_start_on_event(void* context, SceneManagerEvent event)
 }
 
 void nfc_blank_card_scene_start_on_exit(void* context) {
-    struct NFCBlankCardApp* instance = context;
+    struct NfcBlankCardApp* instance = context;
 
     submenu_reset(instance->submenu);
 }

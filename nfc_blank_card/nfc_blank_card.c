@@ -5,27 +5,27 @@
 
 static bool nfc_blank_card_app_custom_event_callback(void* context, uint32_t event) {
     furi_assert(context);
-    struct NFCBlankCardApp* instance = context;
+    struct NfcBlankCardApp* instance = context;
 
     return scene_manager_handle_custom_event(instance->scene_manager, event);
 }
 
 static bool nfc_blank_card_app_back_event_callback(void* context) {
     furi_assert(context);
-    struct NFCBlankCardApp* instance = context;
+    struct NfcBlankCardApp* instance = context;
 
     return scene_manager_handle_back_event(instance->scene_manager);
 }
 
 static void nfc_blank_card_app_tick_event_callback(void* context) {
     furi_assert(context);
-    struct NFCBlankCardApp* instance = context;
+    struct NfcBlankCardApp* instance = context;
 
     scene_manager_handle_tick_event(instance->scene_manager);
 }
 
-struct NFCBlankCardApp* nfc_blank_card_app_alloc(void) {
-    struct NFCBlankCardApp* instance = malloc(sizeof(*instance));
+struct NfcBlankCardApp* nfc_blank_card_app_alloc(void) {
+    struct NfcBlankCardApp* instance = malloc(sizeof(*instance));
 
     instance->scene_manager =
         scene_manager_alloc(&nfc_blank_card_scene_manager_handlers, instance);
@@ -48,23 +48,23 @@ struct NFCBlankCardApp* nfc_blank_card_app_alloc(void) {
     instance->submenu = submenu_alloc();
     view_dispatcher_add_view(
         instance->view_dispatcher,
-        NFCBlankCardAppViewSubmenu,
+        NfcBlankCardAppViewSubmenu,
         submenu_get_view(instance->submenu));
 
     instance->popup = popup_alloc();
     view_dispatcher_add_view(
-        instance->view_dispatcher, NFCBlankCardAppViewPopup, popup_get_view(instance->popup));
+        instance->view_dispatcher, NfcBlankCardAppViewPopup, popup_get_view(instance->popup));
 
     return instance;
 }
 
-void nfc_blank_card_app_free(struct NFCBlankCardApp* instance) {
+void nfc_blank_card_app_free(struct NfcBlankCardApp* instance) {
     furi_assert(instance);
 
-    view_dispatcher_remove_view(instance->view_dispatcher, NFCBlankCardAppViewPopup);
+    view_dispatcher_remove_view(instance->view_dispatcher, NfcBlankCardAppViewPopup);
     popup_free(instance->popup);
 
-    view_dispatcher_remove_view(instance->view_dispatcher, NFCBlankCardAppViewSubmenu);
+    view_dispatcher_remove_view(instance->view_dispatcher, NfcBlankCardAppViewSubmenu);
     submenu_free(instance->submenu);
 
     instance->gui = NULL;
@@ -79,10 +79,10 @@ void nfc_blank_card_app_free(struct NFCBlankCardApp* instance) {
     free(instance);
 }
 
-void nfc_blank_card_app_blink_start(struct NFCBlankCardApp* instance) {
+void nfc_blank_card_app_blink_start(struct NfcBlankCardApp* instance) {
     notification_message(instance->notifications, &sequence_blink_start_cyan);
 }
 
-void nfc_blank_card_app_blink_stop(struct NFCBlankCardApp* instance) {
+void nfc_blank_card_app_blink_stop(struct NfcBlankCardApp* instance) {
     notification_message(instance->notifications, &sequence_blink_stop);
 }
