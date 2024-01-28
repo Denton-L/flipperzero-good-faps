@@ -10,6 +10,7 @@ void nfc_blank_card_scene_reset_on_enter(void* context) {
 
     nfc_blank_card_app_blink_start(instance);
 
+    // TODO?
     //nfc_magic_scanner_start(instance->scanner, nfc_magic_check_worker_callback, instance);
 
     view_dispatcher_switch_to_view(instance->view_dispatcher, NfcBlankCardAppViewPopup);

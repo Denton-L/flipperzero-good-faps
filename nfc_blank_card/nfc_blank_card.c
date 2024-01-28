@@ -1,24 +1,22 @@
+#include "lib/blank_card/nfc_blank_card_scanner.h"
 #include "nfc_blank_card.h"
 #include "scenes/nfc_blank_card_scene.h"
 
-#include <furi.h>
+#include <notification/notification_messages.h>
 
 static bool nfc_blank_card_app_custom_event_callback(void* context, uint32_t event) {
-    furi_assert(context);
     struct NfcBlankCardApp* instance = context;
 
     return scene_manager_handle_custom_event(instance->scene_manager, event);
 }
 
 static bool nfc_blank_card_app_back_event_callback(void* context) {
-    furi_assert(context);
     struct NfcBlankCardApp* instance = context;
 
     return scene_manager_handle_back_event(instance->scene_manager);
 }
 
 static void nfc_blank_card_app_tick_event_callback(void* context) {
-    furi_assert(context);
     struct NfcBlankCardApp* instance = context;
 
     scene_manager_handle_tick_event(instance->scene_manager);
@@ -43,7 +41,7 @@ struct NfcBlankCardApp* nfc_blank_card_app_alloc(void) {
     view_dispatcher_attach_to_gui(
         instance->view_dispatcher, instance->gui, ViewDispatcherTypeFullscreen);
 
-    instance->notifications = furi_record_open(RECORD_NOTIFICATION);
+    instance->notification_app = furi_record_open(RECORD_NOTIFICATION);
 
     instance->submenu = submenu_alloc();
     view_dispatcher_add_view(
@@ -55,11 +53,18 @@ struct NfcBlankCardApp* nfc_blank_card_app_alloc(void) {
     view_dispatcher_add_view(
         instance->view_dispatcher, NfcBlankCardAppViewPopup, popup_get_view(instance->popup));
 
+    instance->nfc_blank_card_scanner = nfc_blank_card_scanner_alloc();
+
+    instance->nfc_device = nfc_device_alloc();
+    // TODO: do we gotta set the loading callback here?
+
     return instance;
 }
 
 void nfc_blank_card_app_free(struct NfcBlankCardApp* instance) {
-    furi_assert(instance);
+    nfc_device_free(instance->nfc_device);
+
+    nfc_blank_card_scanner_free(instance->nfc_blank_card_scanner);
 
     view_dispatcher_remove_view(instance->view_dispatcher, NfcBlankCardAppViewPopup);
     popup_free(instance->popup);
@@ -67,11 +72,8 @@ void nfc_blank_card_app_free(struct NfcBlankCardApp* instance) {
     view_dispatcher_remove_view(instance->view_dispatcher, NfcBlankCardAppViewSubmenu);
     submenu_free(instance->submenu);
 
-    instance->gui = NULL;
-    furi_record_close(RECORD_GUI);
-
-    instance->notifications = NULL;
     furi_record_close(RECORD_NOTIFICATION);
+    furi_record_close(RECORD_GUI);
 
     view_dispatcher_free(instance->view_dispatcher);
     scene_manager_free(instance->scene_manager);
@@ -80,9 +82,9 @@ void nfc_blank_card_app_free(struct NfcBlankCardApp* instance) {
 }
 
 void nfc_blank_card_app_blink_start(struct NfcBlankCardApp* instance) {
-    notification_message(instance->notifications, &sequence_blink_start_cyan);
+    notification_message(instance->notification_app, &sequence_blink_start_cyan);
 }
 
 void nfc_blank_card_app_blink_stop(struct NfcBlankCardApp* instance) {
-    notification_message(instance->notifications, &sequence_blink_stop);
+    notification_message(instance->notification_app, &sequence_blink_stop);
 }

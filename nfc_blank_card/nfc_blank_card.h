@@ -5,8 +5,8 @@
 #include <gui/modules/submenu.h>
 #include <gui/scene_manager.h>
 #include <gui/view_dispatcher.h>
+#include <nfc/nfc_device.h>
 #include <notification/notification.h>
-#include <notification/notification_messages.h>
 
 enum NfcBlankCardAppView {
     NfcBlankCardAppViewSubmenu,
@@ -18,10 +18,14 @@ struct NfcBlankCardApp {
     ViewDispatcher* view_dispatcher;
 
     Gui* gui;
-    NotificationApp* notifications;
+    NotificationApp* notification_app;
 
     Submenu* submenu;
     Popup* popup;
+
+    struct NfcBlankCardScanner* nfc_blank_card_scanner;
+
+    NfcDevice* nfc_device;
 };
 
 struct NfcBlankCardApp* nfc_blank_card_app_alloc(void);
