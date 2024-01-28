@@ -43,6 +43,8 @@ struct NFCBlankCardApp* nfc_blank_card_app_alloc(void) {
     view_dispatcher_attach_to_gui(
         instance->view_dispatcher, instance->gui, ViewDispatcherTypeFullscreen);
 
+    instance->notifications = furi_record_open(RECORD_NOTIFICATION);
+
     instance->submenu = submenu_alloc();
     view_dispatcher_add_view(
         instance->view_dispatcher,
@@ -68,8 +70,19 @@ void nfc_blank_card_app_free(struct NFCBlankCardApp* instance) {
     instance->gui = NULL;
     furi_record_close(RECORD_GUI);
 
+    instance->notifications = NULL;
+    furi_record_close(RECORD_NOTIFICATION);
+
     view_dispatcher_free(instance->view_dispatcher);
     scene_manager_free(instance->scene_manager);
 
     free(instance);
+}
+
+void nfc_blank_card_app_blink_start(struct NFCBlankCardApp* instance) {
+    notification_message(instance->notifications, &sequence_blink_start_cyan);
+}
+
+void nfc_blank_card_app_blink_stop(struct NFCBlankCardApp* instance) {
+    notification_message(instance->notifications, &sequence_blink_stop);
 }
