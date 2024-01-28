@@ -1,5 +1,10 @@
 #include "../nfc_blank_card.h"
-#include "nfc_blank_card_scene_lib.h"
+#include "nfc_blank_card_scene_i.h"
+
+struct SubmenuScene {
+    const char* label;
+    uint32_t scene_id;
+};
 
 static const struct SubmenuScene submenu_scenes[] = {
     {
@@ -24,8 +29,12 @@ void nfc_blank_card_scene_start_on_enter(void* context) {
     struct NFCBlankCardApp* instance = context;
 
     Submenu* submenu = instance->submenu;
-    submenu_add_scenes(
-        submenu, nfc_blank_card_scene_start_submenu_callback, instance, submenu_scenes);
+
+    uint32_t index = 0;
+    for(const struct SubmenuScene* scene = submenu_scenes; scene->label; scene++) {
+        submenu_add_item(
+            submenu, scene->label, index++, nfc_blank_card_scene_start_submenu_callback, instance);
+    }
 
     view_dispatcher_switch_to_view(instance->view_dispatcher, NFCBlankCardAppViewSubmenu);
 }
