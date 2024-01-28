@@ -1,32 +1,31 @@
 #include "../nfc_blank_card.h"
 #include "nfc_blank_card_scene_lib.h"
 
-void nfc_blank_card_scene_start_submenu_callback(void* context, uint32_t index) {
-    UNUSED(context);
-    UNUSED(index);
-}
-
-struct SubmenuItem submenu_items[] = {
+static const struct SubmenuScene submenu_scenes[] = {
     {
         .label = "Reset NFC Tag to Blank",
-        .callback = nfc_blank_card_scene_start_submenu_callback,
+        .scene_id = NFCBlankCardAppSceneStart,
     },
     {
         .label = "Write to Blank NFC Tag",
-        .callback = nfc_blank_card_scene_start_submenu_callback,
+        .scene_id = NFCBlankCardAppSceneStart,
     },
     {
         .label = NULL,
-        .callback = NULL,
     },
 };
+
+void nfc_blank_card_scene_start_submenu_callback(void* context, uint32_t index) {
+    struct NFCBlankCardApp* instance = context;
+    view_dispatcher_send_custom_event(instance->view_dispatcher, index);
+}
 
 void nfc_blank_card_scene_start_on_enter(void* context) {
     struct NFCBlankCardApp* instance = context;
 
     Submenu* submenu = instance->submenu;
-    submenu_add_items(submenu, instance, submenu_items);
-    submenu_set_selected_item(submenu, 0); // TODO: wtf?
+    submenu_add_scenes(
+        submenu, nfc_blank_card_scene_start_submenu_callback, instance, submenu_scenes);
 
     view_dispatcher_switch_to_view(instance->view_dispatcher, NFCBlankCardAppViewSubmenu);
 }
@@ -34,10 +33,12 @@ void nfc_blank_card_scene_start_on_enter(void* context) {
 bool nfc_blank_card_scene_start_on_event(void* context, SceneManagerEvent event) {
     struct NFCBlankCardApp* instance = context;
 
-    UNUSED(instance);
-    UNUSED(event);
+    if(event.type != SceneManagerEventTypeCustom) {
+        return false;
+    }
 
-    return false;
+    scene_manager_next_scene(instance->scene_manager, submenu_scenes[event.event].scene_id);
+    return true;
 }
 
 void nfc_blank_card_scene_start_on_exit(void* context) {

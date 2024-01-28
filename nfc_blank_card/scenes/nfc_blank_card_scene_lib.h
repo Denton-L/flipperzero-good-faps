@@ -6,9 +6,14 @@ enum NFCBlankCardAppScene {
     NFCBlankCardAppSceneStart,
 };
 
-struct SubmenuItem {
+// TODO: do we move thse into scene_start?
+struct SubmenuScene {
     const char* label;
-    SubmenuItemCallback callback;
+    uint32_t scene_id;
 };
 
-void submenu_add_items(Submenu* submenu, void* callback_context, const struct SubmenuItem* items);
+void submenu_add_scenes(
+    Submenu* submenu,
+    SubmenuItemCallback callback,
+    void* callback_context,
+    const struct SubmenuScene* scenes);
