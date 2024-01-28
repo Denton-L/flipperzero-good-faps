@@ -1,7 +1,5 @@
 #include "nfc_blank_card_scene.h"
 
-#include <furi.h>
-
 #define ARRAY_LENGTH(array) (sizeof(array) / sizeof(*array))
 
 void nfc_blank_card_scene_start_on_enter(void* context);
@@ -29,14 +27,11 @@ const SceneManagerHandlers nfc_blank_card_scene_manager_handlers = {
     .scene_num = ARRAY_LENGTH(nfc_blank_card_on_enter_handlers),
 };
 
-void nfc_blank_card_assert_scene_handlers_correct(void) {
-    furi_assert(
-        nfc_blank_card_scene_manager_handlers.scene_num ==
-        ARRAY_LENGTH(nfc_blank_card_on_enter_handlers));
-    furi_assert(
-        nfc_blank_card_scene_manager_handlers.scene_num ==
-        ARRAY_LENGTH(nfc_blank_card_on_event_handlers));
-    furi_assert(
-        nfc_blank_card_scene_manager_handlers.scene_num ==
-        ARRAY_LENGTH(nfc_blank_card_on_exit_handlers));
+bool nfc_blank_card_scene_handlers_is_correct(void) {
+    return nfc_blank_card_scene_manager_handlers.scene_num ==
+               ARRAY_LENGTH(nfc_blank_card_on_enter_handlers) &&
+           nfc_blank_card_scene_manager_handlers.scene_num ==
+               ARRAY_LENGTH(nfc_blank_card_on_event_handlers) &&
+           nfc_blank_card_scene_manager_handlers.scene_num ==
+               ARRAY_LENGTH(nfc_blank_card_on_exit_handlers);
 }

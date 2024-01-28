@@ -4,7 +4,7 @@
 #include <furi.h>
 
 struct NFCBlankCardApp* nfc_blank_card_app_alloc(void) {
-    nfc_blank_card_assert_scene_handlers_correct();
+    furi_assert(nfc_blank_card_scene_handlers_is_correct());
 
     struct NFCBlankCardApp* instance = malloc(sizeof(*instance));
 
@@ -13,6 +13,10 @@ struct NFCBlankCardApp* nfc_blank_card_app_alloc(void) {
     instance->view_dispatcher = view_dispatcher_alloc();
 
     instance->submenu = submenu_alloc();
+    view_dispatcher_add_view(
+        instance->view_dispatcher,
+        NFCBlankCardAppViewSubmenu,
+        submenu_get_view(instance->submenu));
 
     return instance;
 }

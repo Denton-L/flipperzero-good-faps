@@ -2,6 +2,10 @@
 
 #include <gui/modules/submenu.h>
 
+enum NFCBlankCardAppScene {
+    NFCBlankCardAppSceneStart,
+};
+
 struct SubmenuItem {
     const char* label;
     SubmenuItemCallback callback;

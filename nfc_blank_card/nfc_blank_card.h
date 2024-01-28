@@ -4,6 +4,10 @@
 #include <gui/scene_manager.h>
 #include <gui/view_dispatcher.h>
 
+enum NFCBlankCardAppView {
+    NFCBlankCardAppViewSubmenu,
+};
+
 struct NFCBlankCardApp {
     SceneManager* scene_manager;
     ViewDispatcher* view_dispatcher;

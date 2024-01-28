@@ -1,8 +1,6 @@
 #include "../nfc_blank_card.h"
 #include "nfc_blank_card_scene_lib.h"
 
-#include <furi.h>
-
 void nfc_blank_card_scene_start_submenu_callback(void* context, uint32_t index) {
     UNUSED(context);
     UNUSED(index);
@@ -28,6 +26,9 @@ void nfc_blank_card_scene_start_on_enter(void* context) {
 
     Submenu* submenu = instance->submenu;
     submenu_add_items(submenu, instance, submenu_items);
+    submenu_set_selected_item(submenu, 0); // TODO: wtf?
+
+    view_dispatcher_switch_to_view(instance->view_dispatcher, NFCBlankCardAppViewSubmenu);
 }
 
 bool nfc_blank_card_scene_start_on_event(void* context, SceneManagerEvent event) {

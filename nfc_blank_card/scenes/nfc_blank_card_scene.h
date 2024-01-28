@@ -4,4 +4,4 @@
 
 extern const SceneManagerHandlers nfc_blank_card_scene_manager_handlers;
 
-void nfc_blank_card_assert_scene_handlers_correct(void);
+bool nfc_blank_card_scene_handlers_is_correct(void);
