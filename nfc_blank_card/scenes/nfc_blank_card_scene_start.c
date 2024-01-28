@@ -9,11 +9,11 @@ struct SubmenuScene {
 static const struct SubmenuScene submenu_scenes[] = {
     {
         .label = "Reset NFC Tag to Blank",
-        .scene_id = NFCBlankCardAppSceneStart,
+        .scene_id = NFCBlankCardAppSceneReset,
     },
     {
-        .label = "Write to Blank NFC Tag",
-        .scene_id = NFCBlankCardAppSceneStart,
+        .label = "Write to Blank NFC Tag", // TODO
+        .scene_id = -1,
     },
     {
         .label = NULL,

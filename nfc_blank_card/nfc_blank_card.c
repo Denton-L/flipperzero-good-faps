@@ -25,8 +25,6 @@ static void nfc_blank_card_app_tick_event_callback(void* context) {
 }
 
 struct NFCBlankCardApp* nfc_blank_card_app_alloc(void) {
-    furi_assert(nfc_blank_card_scene_handlers_is_correct());
-
     struct NFCBlankCardApp* instance = malloc(sizeof(*instance));
 
     instance->scene_manager =
@@ -51,11 +49,18 @@ struct NFCBlankCardApp* nfc_blank_card_app_alloc(void) {
         NFCBlankCardAppViewSubmenu,
         submenu_get_view(instance->submenu));
 
+    instance->popup = popup_alloc();
+    view_dispatcher_add_view(
+        instance->view_dispatcher, NFCBlankCardAppViewPopup, popup_get_view(instance->popup));
+
     return instance;
 }
 
 void nfc_blank_card_app_free(struct NFCBlankCardApp* instance) {
     furi_assert(instance);
+
+    view_dispatcher_remove_view(instance->view_dispatcher, NFCBlankCardAppViewPopup);
+    popup_free(instance->popup);
 
     view_dispatcher_remove_view(instance->view_dispatcher, NFCBlankCardAppViewSubmenu);
     submenu_free(instance->submenu);

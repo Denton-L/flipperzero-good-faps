@@ -2,22 +2,29 @@
 
 #define ARRAY_LENGTH(array) (sizeof(array) / sizeof(*array))
 
-void nfc_blank_card_scene_start_on_enter(void* context);
+#define ADD_SCENE(name, id)                                                              \
+    void nfc_blank_card_scene_##name##_on_enter(void* context);                          \
+    bool nfc_blank_card_scene_##name##_on_event(void* context, SceneManagerEvent event); \
+    void nfc_blank_card_scene_##name##_on_exit(void* context);
+#include "nfc_blank_card_scene_config.h"
+#undef ADD_SCENE
 
 static const AppSceneOnEnterCallback nfc_blank_card_on_enter_handlers[] = {
-    nfc_blank_card_scene_start_on_enter,
+#define ADD_SCENE(name, id) nfc_blank_card_scene_##name##_on_enter,
+#include "nfc_blank_card_scene_config.h"
+#undef ADD_SCENE
 };
-
-bool nfc_blank_card_scene_start_on_event(void* context, SceneManagerEvent event);
 
 static const AppSceneOnEventCallback nfc_blank_card_on_event_handlers[] = {
-    nfc_blank_card_scene_start_on_event,
+#define ADD_SCENE(name, id) nfc_blank_card_scene_##name##_on_event,
+#include "nfc_blank_card_scene_config.h"
+#undef ADD_SCENE
 };
 
-void nfc_blank_card_scene_start_on_exit(void* context);
-
 static const AppSceneOnExitCallback nfc_blank_card_on_exit_handlers[] = {
-    nfc_blank_card_scene_start_on_exit,
+#define ADD_SCENE(name, id) nfc_blank_card_scene_##name##_on_exit,
+#include "nfc_blank_card_scene_config.h"
+#undef ADD_SCENE
 };
 
 const SceneManagerHandlers nfc_blank_card_scene_manager_handlers = {
@@ -26,12 +33,3 @@ const SceneManagerHandlers nfc_blank_card_scene_manager_handlers = {
     .on_exit_handlers = nfc_blank_card_on_exit_handlers,
     .scene_num = ARRAY_LENGTH(nfc_blank_card_on_enter_handlers),
 };
-
-bool nfc_blank_card_scene_handlers_is_correct(void) {
-    return nfc_blank_card_scene_manager_handlers.scene_num ==
-               ARRAY_LENGTH(nfc_blank_card_on_enter_handlers) &&
-           nfc_blank_card_scene_manager_handlers.scene_num ==
-               ARRAY_LENGTH(nfc_blank_card_on_event_handlers) &&
-           nfc_blank_card_scene_manager_handlers.scene_num ==
-               ARRAY_LENGTH(nfc_blank_card_on_exit_handlers);
-}

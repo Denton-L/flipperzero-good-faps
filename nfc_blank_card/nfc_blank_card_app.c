@@ -1,4 +1,3 @@
-#include "nfc_blank_card_icons.h"
 #include "nfc_blank_card.h"
 
 int32_t nfc_blank_card_app(void* p) {
