@@ -1,6 +1,6 @@
 #include "nfc_blank_card_scene.h"
 
-#define ARRAY_LENGTH(array) (sizeof(array) / sizeof(*array))
+#include <furi.h>
 
 #define ADD_SCENE(name, id)                                                              \
     void nfc_blank_card_scene_##name##_on_enter(void* context);                          \
@@ -31,5 +31,5 @@ const SceneManagerHandlers nfc_blank_card_scene_manager_handlers = {
     .on_enter_handlers = nfc_blank_card_on_enter_handlers,
     .on_event_handlers = nfc_blank_card_on_event_handlers,
     .on_exit_handlers = nfc_blank_card_on_exit_handlers,
-    .scene_num = ARRAY_LENGTH(nfc_blank_card_on_enter_handlers),
+    .scene_num = COUNT_OF(nfc_blank_card_on_enter_handlers),
 };
