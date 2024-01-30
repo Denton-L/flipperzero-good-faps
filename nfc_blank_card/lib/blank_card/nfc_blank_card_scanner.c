@@ -39,18 +39,32 @@ void nfc_blank_card_scanner_free(struct NfcBlankCardScanner* instance) {
     free(instance);
 }
 
+static bool poller_detect(Nfc* nfc) {
+    UNUSED(nfc);
+    return false;
+}
+
 static int32_t nfc_blank_card_scanner_worker(void* context) {
     struct NfcBlankCardScanner* instance = context;
 
-    for (;;) {
+    for(;;) {
         furi_mutex_acquire(instance->state_mutex, 0);
         enum NfcBlankCardScannerState state = instance->state;
         furi_mutex_release(instance->state_mutex);
         if (state != NfcBlankCardScannerStateActive) {
             break;
         }
-        FURI_LOG_I("worker", "asdf"); // TODO
+
+        if(poller_detect(instance->nfc)) {
+            enum NfcBlankCardScannerEvent event = NfcBlankCardScannerEventTypeDetected;
+            instance->callback(instance->context, event);
+            break;
+        }
     }
+
+    furi_mutex_acquire(instance->state_mutex, 0);
+    instance->state = NfcBlankCardScannerStateIdle;
+    furi_mutex_release(instance->state_mutex);
 
     return 0;
 }
@@ -95,8 +109,4 @@ void nfc_blank_card_scanner_stop(struct NfcBlankCardScanner* instance) {
 
     instance->context = NULL;
     instance->callback = NULL;
-
-    furi_mutex_acquire(instance->state_mutex, 0);
-    instance->state = NfcBlankCardScannerStateIdle;
-    furi_mutex_release(instance->state_mutex);
 }
