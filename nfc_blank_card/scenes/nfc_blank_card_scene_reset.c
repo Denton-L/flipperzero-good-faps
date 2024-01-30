@@ -2,6 +2,12 @@
 
 #include <nfc_blank_card_icons.h>
 
+static void nfc_blank_card_scanner_callback(void* context, enum NfcBlankCardScannerEvent event) {
+    struct NfcBlankCardApp* instance = context;
+    UNUSED(instance);
+    UNUSED(event);
+}
+
 void nfc_blank_card_scene_reset_on_enter(void* context) {
     struct NfcBlankCardApp* instance = context;
 
@@ -9,10 +15,8 @@ void nfc_blank_card_scene_reset_on_enter(void* context) {
     popup_set_text(instance->popup, "Apply card to\nthe back", 128, 32, AlignRight, AlignCenter);
 
     nfc_blank_card_app_blink_start(instance);
-
-    // TODO?
-    //nfc_magic_scanner_start(instance->scanner, nfc_magic_check_worker_callback, instance);
-
+    nfc_blank_card_scanner_start(
+        instance->nfc_blank_card_scanner, nfc_blank_card_scanner_callback, instance);
     view_dispatcher_switch_to_view(instance->view_dispatcher, NfcBlankCardAppViewPopup);
 }
 
@@ -32,6 +36,7 @@ bool nfc_blank_card_scene_reset_on_event(void* context, SceneManagerEvent event)
 void nfc_blank_card_scene_reset_on_exit(void* context) {
     struct NfcBlankCardApp* instance = context;
 
+    nfc_blank_card_scanner_stop(instance->nfc_blank_card_scanner);
     nfc_blank_card_app_blink_stop(instance);
     popup_reset(instance->popup);
 }

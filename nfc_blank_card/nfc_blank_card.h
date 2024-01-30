@@ -1,5 +1,7 @@
 #pragma once
 
+#include "lib/blank_card/nfc_blank_card_scanner.h"
+
 #include <gui/gui.h>
 #include <gui/modules/popup.h>
 #include <gui/modules/submenu.h>

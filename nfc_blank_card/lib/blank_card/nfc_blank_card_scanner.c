@@ -40,7 +40,18 @@ void nfc_blank_card_scanner_free(struct NfcBlankCardScanner* instance) {
 }
 
 static int32_t nfc_blank_card_scanner_worker(void* context) {
-    UNUSED(context);
+    struct NfcBlankCardScanner* instance = context;
+
+    for (;;) {
+        furi_mutex_acquire(instance->state_mutex, 0);
+        enum NfcBlankCardScannerState state = instance->state;
+        furi_mutex_release(instance->state_mutex);
+        if (state != NfcBlankCardScannerStateActive) {
+            break;
+        }
+        FURI_LOG_I("worker", "asdf"); // TODO
+    }
+
     return 0;
 }
 
