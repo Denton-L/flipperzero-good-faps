@@ -3,6 +3,7 @@
 #include <furi.h>
 #include <nfc/nfc.h>
 #include <nfc/nfc_poller.h>
+#include <nfc/protocols/mf_classic/mf_classic_poller.h>
 
 enum NfcBlankCardScannerState {
     NfcBlankCardScannerStateIdle,
@@ -12,7 +13,6 @@ enum NfcBlankCardScannerState {
 
 struct NfcBlankCardScanner {
     Nfc* nfc;
-    NfcPoller* nfc_poller;
 
     enum NfcBlankCardScannerState state;
     FuriMutex* state_mutex;
@@ -26,7 +26,6 @@ struct NfcBlankCardScanner* nfc_blank_card_scanner_alloc(void) {
     struct NfcBlankCardScanner* instance = malloc(sizeof(*instance));
 
     instance->nfc = nfc_alloc();
-    //instance->nfc_poller = nfc_poller_alloc(instance->nfc, NfcProtocolMfClassic);
 
     instance->state = NfcBlankCardScannerStateIdle;
     instance->state_mutex = furi_mutex_alloc(FuriMutexTypeNormal);
@@ -37,18 +36,37 @@ struct NfcBlankCardScanner* nfc_blank_card_scanner_alloc(void) {
 void nfc_blank_card_scanner_free(struct NfcBlankCardScanner* instance) {
     furi_mutex_free(instance->state_mutex);
 
-    //nfc_poller_free(instance->nfc_poller);
     nfc_free(instance->nfc);
 
     free(instance);
 }
 
-static bool poller_detect(Nfc* nfc) {
-    NfcPoller* nfc_poller = nfc_poller_alloc(nfc, NfcProtocolMfClassic);
-    bool detected = nfc_poller_detect(nfc_poller);
-    FURI_LOG_I("detect", "%d", detected);
-    nfc_poller_free(nfc_poller);
-    return detected;
+static const NfcProtocol NFC_PROTOCOL = NfcProtocolMfClassic;
+
+static NfcCommand nfc_blank_card_scanner_callback(NfcGenericEvent event, void* context) {
+    furi_assert(event.protocol == NFC_PROTOCOL, "unexpected protocol");
+
+    MfClassicPoller* poller = event.instance;
+    MfClassicPollerEvent* event_data = event.event_data;
+    struct NfcBlankCardScanner* instance = context;
+
+    FURI_LOG_I("type", "%d", event_data->type);
+
+    UNUSED(poller);
+    UNUSED(instance);
+
+    return NfcCommandContinue;
+}
+
+static bool poller_detect(struct NfcBlankCardScanner* instance) {
+    NfcPoller* nfc_poller = nfc_poller_alloc(instance->nfc, NFC_PROTOCOL);
+    nfc_poller_start(nfc_poller, nfc_blank_card_scanner_callback, instance);
+    for (;;) {
+        FURI_LOG_I("det", "a");
+    }
+    //nfc_poller_stop(nfc_poller);
+    //nfc_poller_free(nfc_poller);
+    return false;
 }
 
 static int32_t nfc_blank_card_scanner_worker(void* context) {
@@ -62,7 +80,7 @@ static int32_t nfc_blank_card_scanner_worker(void* context) {
             break;
         }
 
-        if(poller_detect(instance->nfc)) {
+        if(poller_detect(instance)) {
             enum NfcBlankCardScannerEvent event = NfcBlankCardScannerEventTypeDetected;
             instance->callback(instance->context, event);
             break;
