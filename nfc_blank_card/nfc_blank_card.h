@@ -1,6 +1,6 @@
 #pragma once
 
-#include "lib/blank_card/nfc_blank_card_scanner.h"
+#include "lib/blank_card/nfc_blank_card_poller.h"
 
 #include <gui/gui.h>
 #include <gui/modules/popup.h>
@@ -25,7 +25,8 @@ struct NfcBlankCardApp {
     Submenu* submenu;
     Popup* popup;
 
-    struct NfcBlankCardScanner* nfc_blank_card_scanner;
+    Nfc* nfc;
+    struct NfcBlankCardPoller* nfc_blank_card_poller;
 
     NfcDevice* nfc_device;
 };

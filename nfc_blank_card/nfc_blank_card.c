@@ -1,4 +1,3 @@
-#include "lib/blank_card/nfc_blank_card_scanner.h"
 #include "nfc_blank_card.h"
 #include "scenes/nfc_blank_card_scene.h"
 
@@ -53,7 +52,8 @@ struct NfcBlankCardApp* nfc_blank_card_app_alloc(void) {
     view_dispatcher_add_view(
         instance->view_dispatcher, NfcBlankCardAppViewPopup, popup_get_view(instance->popup));
 
-    instance->nfc_blank_card_scanner = nfc_blank_card_scanner_alloc();
+    instance->nfc = nfc_alloc();
+    instance->nfc_blank_card_poller = nfc_blank_card_poller_alloc(instance->nfc);
 
     instance->nfc_device = nfc_device_alloc();
     // TODO: do we gotta set the loading callback here?
@@ -64,7 +64,8 @@ struct NfcBlankCardApp* nfc_blank_card_app_alloc(void) {
 void nfc_blank_card_app_free(struct NfcBlankCardApp* instance) {
     nfc_device_free(instance->nfc_device);
 
-    nfc_blank_card_scanner_free(instance->nfc_blank_card_scanner);
+    nfc_blank_card_poller_free(instance->nfc_blank_card_poller);
+    nfc_free(instance->nfc);
 
     view_dispatcher_remove_view(instance->view_dispatcher, NfcBlankCardAppViewPopup);
     popup_free(instance->popup);
