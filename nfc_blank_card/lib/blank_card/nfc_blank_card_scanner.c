@@ -2,6 +2,7 @@
 
 #include <furi.h>
 #include <nfc/nfc.h>
+#include <nfc/nfc_poller.h>
 
 enum NfcBlankCardScannerState {
     NfcBlankCardScannerStateIdle,
@@ -11,6 +12,7 @@ enum NfcBlankCardScannerState {
 
 struct NfcBlankCardScanner {
     Nfc* nfc;
+    NfcPoller* nfc_poller;
 
     enum NfcBlankCardScannerState state;
     FuriMutex* state_mutex;
@@ -24,6 +26,7 @@ struct NfcBlankCardScanner* nfc_blank_card_scanner_alloc(void) {
     struct NfcBlankCardScanner* instance = malloc(sizeof(*instance));
 
     instance->nfc = nfc_alloc();
+    //instance->nfc_poller = nfc_poller_alloc(instance->nfc, NfcProtocolMfClassic);
 
     instance->state = NfcBlankCardScannerStateIdle;
     instance->state_mutex = furi_mutex_alloc(FuriMutexTypeNormal);
@@ -34,14 +37,18 @@ struct NfcBlankCardScanner* nfc_blank_card_scanner_alloc(void) {
 void nfc_blank_card_scanner_free(struct NfcBlankCardScanner* instance) {
     furi_mutex_free(instance->state_mutex);
 
+    //nfc_poller_free(instance->nfc_poller);
     nfc_free(instance->nfc);
 
     free(instance);
 }
 
 static bool poller_detect(Nfc* nfc) {
-    UNUSED(nfc);
-    return false;
+    NfcPoller* nfc_poller = nfc_poller_alloc(nfc, NfcProtocolMfClassic);
+    bool detected = nfc_poller_detect(nfc_poller);
+    FURI_LOG_I("detect", "%d", detected);
+    nfc_poller_free(nfc_poller);
+    return detected;
 }
 
 static int32_t nfc_blank_card_scanner_worker(void* context) {
