@@ -33,7 +33,33 @@ static NfcCommand nfc_blank_card_poller_callback(NfcGenericEvent event, void* co
     MfClassicPollerEvent* event_data = event.event_data;
     struct NfcBlankCardPoller* instance = context;
 
-    FURI_LOG_I("type", "%d", event_data->type);
+    MfClassicKey key = {
+        .data = { 0xA0, 0xA1, 0xA2, 0xA3, 0xA4, 0xA5 }
+    };
+    MfClassicBlock data = {};
+    MfClassicError error;
+
+    switch (event_data->type) {
+        case MfClassicPollerEventTypeCardDetected:
+            FURI_LOG_I("callback", "detected");
+            error = mf_classic_poller_auth(poller, 0, &key, MfClassicKeyTypeA, NULL);
+            FURI_LOG_I("callback", "decrypted error: %d", error);
+            error = mf_classic_poller_read_block(poller, 0, &data);
+            FURI_LOG_I("callback", "read error: %d", error);
+            for (size_t i = 0; i < MF_CLASSIC_BLOCK_SIZE; ++i) {
+                FURI_LOG_I("callback", "%02d: %02x", i, data.data[i]);
+            }
+            break;
+        case MfClassicPollerEventTypeCardLost:
+            FURI_LOG_I("callback", "lost");
+            break;
+        default:
+            FURI_LOG_I("type", "%d", event_data->type);
+            for (size_t i = 0; i < MF_CLASSIC_BLOCK_SIZE; ++i) {
+                FURI_LOG_I("callback", "%02d: %02x", i, data.data[i]);
+            }
+            break;
+    }
 
     UNUSED(poller);
     UNUSED(instance);
