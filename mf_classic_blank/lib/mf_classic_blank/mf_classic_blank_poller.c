@@ -1,4 +1,4 @@
-#include "nfc_blank_card_poller.h"
+#include "mf_classic_blank_poller.h"
 
 #include <furi.h>
 #include <nfc/nfc_poller.h>
@@ -6,32 +6,32 @@
 
 static const NfcProtocol NFC_PROTOCOL = NfcProtocolMfClassic;
 
-struct NfcBlankCardPoller {
+struct MfClassicBlankPoller {
     Nfc* nfc;
 
     NfcPoller* nfc_poller;
-    NfcBlankCardPollerCallback callback;
+    MfClassicBlankPollerCallback callback;
     void* context;
 };
 
-struct NfcBlankCardPoller* nfc_blank_card_poller_alloc(Nfc* nfc) {
-    struct NfcBlankCardPoller* instance = malloc(sizeof(*instance));
+struct MfClassicBlankPoller* mf_classic_blank_poller_alloc(Nfc* nfc) {
+    struct MfClassicBlankPoller* instance = malloc(sizeof(*instance));
 
     instance->nfc = nfc;
 
     return instance;
 }
 
-void nfc_blank_card_poller_free(struct NfcBlankCardPoller* instance) {
+void mf_classic_blank_poller_free(struct MfClassicBlankPoller* instance) {
     free(instance);
 }
 
-static NfcCommand nfc_blank_card_poller_callback(NfcGenericEvent event, void* context) {
+static NfcCommand mf_classic_blank_poller_callback(NfcGenericEvent event, void* context) {
     furi_assert(event.protocol == NFC_PROTOCOL, "unexpected protocol");
 
     MfClassicPoller* poller = event.instance;
     MfClassicPollerEvent* event_data = event.event_data;
-    struct NfcBlankCardPoller* instance = context;
+    struct MfClassicBlankPoller* instance = context;
 
     MfClassicKey key = {
         .data = { 0xA0, 0xA1, 0xA2, 0xA3, 0xA4, 0xA5 }
@@ -67,15 +67,15 @@ static NfcCommand nfc_blank_card_poller_callback(NfcGenericEvent event, void* co
     return NfcCommandContinue;
 }
 
-void nfc_blank_card_poller_start(struct NfcBlankCardPoller* instance, NfcBlankCardPollerCallback callback, void* context) {
+void mf_classic_blank_poller_start(struct MfClassicBlankPoller* instance, MfClassicBlankPollerCallback callback, void* context) {
     instance->nfc_poller = nfc_poller_alloc(instance->nfc, NFC_PROTOCOL);
     instance->callback = callback;
     instance->context = context;
 
-    nfc_poller_start(instance->nfc_poller, nfc_blank_card_poller_callback, instance);
+    nfc_poller_start(instance->nfc_poller, mf_classic_blank_poller_callback, instance);
 }
 
-void nfc_blank_card_poller_stop(struct NfcBlankCardPoller* instance) {
+void mf_classic_blank_poller_stop(struct MfClassicBlankPoller* instance) {
     nfc_poller_stop(instance->nfc_poller);
 
     instance->context = NULL;
