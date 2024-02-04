@@ -2,7 +2,7 @@
 
 #include <furi.h>
 
-#define ADD_SCENE(name, id)                                                              \
+#define ADD_SCENE(name, id)                                                                \
     void mf_classic_blank_scene_##name##_on_enter(void* context);                          \
     bool mf_classic_blank_scene_##name##_on_event(void* context, SceneManagerEvent event); \
     void mf_classic_blank_scene_##name##_on_exit(void* context);

@@ -12,7 +12,8 @@ void mf_classic_blank_scene_start_on_enter(void* context) {
     Submenu* submenu = instance->submenu;
 
     uint32_t index = 0;
-    for(const struct MfClassicBlankAppMode* mode = mf_classic_blank_app_modes; mode->label; ++mode) {
+    for(const struct MfClassicBlankAppMode* mode = mf_classic_blank_app_modes; mode->label;
+        ++mode) {
         submenu_add_item(
             submenu, mode->label, index++, mf_classic_blank_scene_start_submenu_callback, instance);
     }

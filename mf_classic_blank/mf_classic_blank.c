@@ -18,7 +18,6 @@ const struct MfClassicBlankAppMode mf_classic_blank_app_modes[] = {
     },
 };
 
-
 static bool mf_classic_blank_app_custom_event_callback(void* context, uint32_t event) {
     struct MfClassicBlankApp* instance = context;
 
@@ -72,7 +71,6 @@ struct MfClassicBlankApp* mf_classic_blank_app_alloc(void) {
     instance->file_path = furi_string_alloc_set_str(NFC_APP_FOLDER);
     instance->source_nfc_device = nfc_device_alloc();
     // TODO: do we gotta set the loading callback here?
-
 
     instance->nfc = nfc_alloc();
     instance->mf_classic_blank_poller = mf_classic_blank_poller_alloc(instance->nfc);
