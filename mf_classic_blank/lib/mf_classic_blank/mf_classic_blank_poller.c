@@ -1,10 +1,9 @@
+#include "mf_classic_blank.h"
 #include "mf_classic_blank_poller.h"
 
 #include <furi.h>
 #include <nfc/nfc_poller.h>
 #include <nfc/protocols/mf_classic/mf_classic_poller.h>
-
-static const NfcProtocol NFC_PROTOCOL = NfcProtocolMfClassic;
 
 struct MfClassicBlankPoller {
     Nfc* nfc;
