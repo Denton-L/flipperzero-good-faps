@@ -7,15 +7,13 @@
 const struct MfClassicBlankAppMode mf_classic_blank_app_modes[] = {
     {
         .label = "Reset Nfc Tag to Blank",
-        .device_check = mf_classic_blank_device_blankable,
+        .device_check = mf_classic_blank_device_resettable,
     },
     {
         .label = "Write to Blank Nfc Tag",
         .device_check = mf_classic_blank_device_writable,
     },
-    {
-        .label = NULL,
-    },
+    {},
 };
 
 static bool mf_classic_blank_app_custom_event_callback(void* context, uint32_t event) {
