@@ -14,5 +14,8 @@ typedef void (*MfClassicBlankPollerCallback)(void* context, enum MfClassicBlankP
 
 struct MfClassicBlankPoller* mf_classic_blank_poller_alloc(Nfc* nfc);
 void mf_classic_blank_poller_free(struct MfClassicBlankPoller* instance);
-void mf_classic_blank_poller_start(struct MfClassicBlankPoller* instance, MfClassicBlankPollerCallback callback, void* context);
+void mf_classic_blank_poller_start(
+    struct MfClassicBlankPoller* instance,
+    MfClassicBlankPollerCallback callback,
+    void* context);
 void mf_classic_blank_poller_stop(struct MfClassicBlankPoller* instance);
