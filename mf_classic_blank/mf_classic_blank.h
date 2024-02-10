@@ -7,6 +7,7 @@
 #include <gui/gui.h>
 #include <gui/modules/popup.h>
 #include <gui/modules/submenu.h>
+#include <gui/modules/widget.h>
 #include <gui/scene_manager.h>
 #include <gui/view_dispatcher.h>
 #include <nfc/nfc_device.h>
@@ -25,6 +26,7 @@ extern const struct MfClassicBlankAppMode mf_classic_blank_app_modes[];
 enum MfClassicBlankAppView {
     MfClassicBlankAppViewSubmenu,
     MfClassicBlankAppViewPopup,
+    MfClassicBlankAppViewWidget,
 };
 
 struct MfClassicBlankApp {
@@ -38,8 +40,10 @@ struct MfClassicBlankApp {
 
     Submenu* submenu;
     Popup* popup;
+    Widget* widget;
 
     const struct MfClassicBlankAppMode* mode;
+    const char* error;
 
     FuriString* file_path;
     NfcDevice* source_nfc_device;

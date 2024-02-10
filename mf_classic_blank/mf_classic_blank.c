@@ -66,6 +66,10 @@ struct MfClassicBlankApp* mf_classic_blank_app_alloc(void) {
     view_dispatcher_add_view(
         instance->view_dispatcher, MfClassicBlankAppViewPopup, popup_get_view(instance->popup));
 
+    instance->widget = widget_alloc();
+    view_dispatcher_add_view(
+        instance->view_dispatcher, MfClassicBlankAppViewWidget, widget_get_view(instance->widget));
+
     instance->file_path = furi_string_alloc_set_str(NFC_APP_FOLDER);
     instance->source_nfc_device = nfc_device_alloc();
     // TODO: do we gotta set the loading callback here?
@@ -82,6 +86,9 @@ void mf_classic_blank_app_free(struct MfClassicBlankApp* instance) {
 
     nfc_device_free(instance->source_nfc_device);
     furi_string_free(instance->file_path);
+
+    view_dispatcher_remove_view(instance->view_dispatcher, MfClassicBlankAppViewWidget);
+    widget_free(instance->widget);
 
     view_dispatcher_remove_view(instance->view_dispatcher, MfClassicBlankAppViewPopup);
     popup_free(instance->popup);

@@ -1,3 +1,5 @@
 ADD_SCENE(start, Start)
 ADD_SCENE(file_select, FileSelect)
+ADD_SCENE(bad_file, BadFile)
+ADD_SCENE(write_confirm, WriteConfirm)
 ADD_SCENE(reset, Reset)

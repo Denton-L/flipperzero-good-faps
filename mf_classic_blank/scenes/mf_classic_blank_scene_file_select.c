@@ -1,12 +1,12 @@
 #include "../lib/mf_classic_blank/mf_classic_blank_device.h"
 #include "../mf_classic_blank.h"
-#include "mf_classic_blank_scene_i.h"
+#include "mf_classic_blank_scene_lib.h"
 
 #include <mf_classic_blank_icons.h>
 
 static const char* nfc_app_extension = ".nfc";
 
-static bool mf_classic_blank_app_load_from_file_select(struct MfClassicBlankApp* instance) {
+static bool mf_classic_blank_scene_load_from_file_select(struct MfClassicBlankApp* instance) {
     DialogsFileBrowserOptions browser_options;
     dialog_file_browser_set_basic_options(&browser_options, nfc_app_extension, &I_Nfc_10px);
     browser_options.base_path = NFC_APP_FOLDER;
@@ -25,14 +25,13 @@ static bool mf_classic_blank_app_load_from_file_select(struct MfClassicBlankApp*
 void mf_classic_blank_scene_file_select_on_enter(void* context) {
     struct MfClassicBlankApp* instance = context;
 
-    if(!mf_classic_blank_app_load_from_file_select(instance)) {
+    if(!mf_classic_blank_scene_load_from_file_select(instance)) {
         scene_manager_previous_scene(instance->scene_manager);
         return;
     }
 
-    const char* error = instance->mode->device_check(instance->source_nfc_device);
-    UNUSED(error); // TODO
-    scene_manager_next_scene(instance->scene_manager, MfClassicBlankAppSceneFileSelect);
+    instance->error = instance->mode->device_check(instance->source_nfc_device);
+    scene_manager_next_scene(instance->scene_manager, instance->error ? MfClassicBlankAppSceneBadFile : MfClassicBlankAppSceneWriteConfirm);
 }
 
 bool mf_classic_blank_scene_file_select_on_event(void* context, SceneManagerEvent event) {

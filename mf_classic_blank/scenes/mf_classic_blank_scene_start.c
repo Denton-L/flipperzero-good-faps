@@ -1,5 +1,5 @@
 #include "../mf_classic_blank.h"
-#include "mf_classic_blank_scene_i.h"
+#include "mf_classic_blank_scene_lib.h"
 
 void mf_classic_blank_scene_start_submenu_callback(void* context, uint32_t index) {
     struct MfClassicBlankApp* instance = context;
